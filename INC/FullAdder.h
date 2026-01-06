@@ -5,4 +5,4 @@
 
 void FullAdder(bool, bool, bool, bool*, bool*);
 
-#endif;
+#endif
