@@ -53,3 +53,9 @@ dkms.conf
 
 # debug information files
 *.dwo
+
+# Ignore TARGET directory (and everything inside)
+TARGET/
+
+# Ignore all files named test_report.txt anywhere
+test_report.txt
