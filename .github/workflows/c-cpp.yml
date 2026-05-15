@@ -1,21 +1,58 @@
-name: C/C++ CI
+name: C Build and Unit Test
 
 on:
   push:
-    branches: [ "main" ]
+    branches: [ "main", "master" ]
   pull_request:
-    branches: [ "main" ]
+    branches: [ "main", "master" ]
 
 jobs:
-  build:
-
+  build-and-test:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: make
-      run: make
-    - name: make check
-      run: make check
-    - name: make distcheck
-      run: make distcheck
+      # ==============================
+      # Checkout source code
+      # ==============================
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      # ==============================
+      # Install GCC toolchain
+      # ==============================
+      - name: Install build tools
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential
+
+      # ==============================
+      # Build project
+      # ==============================
+      - name: Build application
+        run: make all
+
+      # ==============================
+      # Run unit tests
+      # ==============================
+      - name: Run tests
+        run: make test
+
+      # ==============================
+      # Upload test report
+      # ==============================
+      - name: Upload test report artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: test_report.txt
+
+      # ==============================
+      # Upload build artifacts (optional but useful)
+      # ==============================
+      - name: Upload build output
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-artifacts
+          path: |
+            TARGET/
+            OBJ/
