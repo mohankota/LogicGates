@@ -43,20 +43,15 @@ TEST_BINS := $(patsubst $(TEST_DIR)/%_test.c,$(TARGET_DIR)/%_test,$(TEST_SRCS))
 # ==============================
 # Test selection logic
 # ==============================
-# Extra args: make test HalfAdder_test.c
 EXTRA_TESTS := $(filter %.c,$(MAKECMDGOALS))
-
-# Convert file names → test binaries
 SELECTED_TEST_BINS := $(patsubst %.c,$(TARGET_DIR)/%,$(notdir $(EXTRA_TESTS)))
 
-# Decide which tests to run
 ifeq ($(EXTRA_TESTS),)
 RUN_TESTS := $(TEST_BINS)
 else
 RUN_TESTS := $(SELECTED_TEST_BINS)
 endif
 
-# Tell make these are NOT real build targets
 .PHONY: $(EXTRA_TESTS)
 
 # ==============================
@@ -111,8 +106,10 @@ test: $(RUN_TESTS)
 	echo "Failed: $$FAILS"; \
 	if [ $$FAILS -eq 0 ]; then \
 		echo "ALL TESTS PASSED"; \
+		exit 0; \
 	else \
 		echo "SOME TESTS FAILED"; \
+		exit 1; \
 	fi
 
 # ==============================
